@@ -20,36 +20,50 @@ class Lot {
 
 fun main() {
 
-    val parking = listOf(Lot(), Lot())
+    val parking = List(20) { Lot() }
     var firstFreeSpot = 0
-    parking[0].park(mutableListOf("park", "Boss", "black"))
+    var input: MutableList<String>
 
-    val input = readLine()!!.split(" ").toMutableList()
-    for (i in parking.indices) {
-        if (parking[i].isFree) {
-            firstFreeSpot = i
-            break
-        } else continue
+    while (true) {
+        input = readLine()!!.split(" ").toMutableList()
+
+        when(input.first()) {
+            "exit" -> break
+            "leave" -> leaveSpot(parking, input)
+            "park" -> {
+                var parkingIsFull = false
+
+                for (i in parking.indices) {
+                    if (parking[i].isFree) {
+                        firstFreeSpot = i
+                        break
+                    } else if (i == parking.lastIndex && !parking.last().isFree) {
+                        println("Sorry, the parking lot is full.")
+                        parkingIsFull = true
+                        break
+                    } else continue
+                }
+                if (!parkingIsFull) parkOnSpot(parking, input, firstFreeSpot)
+            }
+            else -> println("Incorrect input.")
+        }
     }
-    changeLotStatus(parking, input, firstFreeSpot)
 }
 
-fun  changeLotStatus(parking: List<Lot>, input: MutableList<String>, firstFreeSpot: Int) {
+fun  parkOnSpot(parking: List<Lot>, input: MutableList<String>, firstFreeSpot: Int) {
 
-    if (input.first() == "park") {
-        parking[firstFreeSpot].park(input)
-        println("${parking[firstFreeSpot].color} car parked in spot ${firstFreeSpot + 1}.")
+    parking[firstFreeSpot].park(input)
+    println("${parking[firstFreeSpot].color} car parked in spot ${firstFreeSpot + 1}.")
+}
 
-    } else if (input.first() == "leave") {
-        val lotNumber = input.last().toInt() - 1
+fun leaveSpot(parking: List<Lot>, input: MutableList<String>) {
+    val lotNumber = input.last().toInt() - 1
 
-        if (lotNumber <= parking.size) {
-            if (!parking[lotNumber].isFree) {
-                parking[lotNumber].leave()
-                println("Spot ${lotNumber + 1} is free.")
-            } else println("There is no car in spot ${lotNumber + 1}.")
-        }
-
-    } else println("Incorrect input.")
+    if (lotNumber <= parking.size) {
+        if (!parking[lotNumber].isFree) {
+            parking[lotNumber].leave()
+            println("Spot ${lotNumber + 1} is free.")
+        } else println("There is no car in spot ${lotNumber + 1}.")
+    }
 
 }
