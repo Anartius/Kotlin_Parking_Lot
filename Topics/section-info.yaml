@@ -1,0 +1,7 @@
+content:
+- Nullable and non-nullable types
+- Null safety
+- Type system
+- Inheritance
+- toString()
+- Data class

@@ -67,6 +67,9 @@ fun main() {
                 }
                 if (!parkingIsFull) parkOnSpot(parking, input, firstFreeSpot)
             }
+            "reg_by_color" -> regByColor(parking, input)
+            "spot_by_color" -> spotByColor(parking, input)
+            "spot_by_reg" -> spotByReg(parking, input)
             else -> println("Incorrect input.")
         }
     }
@@ -98,4 +101,40 @@ fun printStatus(parking: MutableList<Lot>) {
         } else amountOfFreeSpots++
     }
     if (amountOfFreeSpots == parking.size) println("Parking lot is empty.")
+}
+
+fun regByColor(parking: MutableList<Lot>, input: MutableList<String>) {
+    val color = input.last()
+    val carsByColor = mutableListOf<String>()
+    parking.filter { it.color.lowercase() == color.lowercase() }
+        .forEach { carsByColor.add(it.licensePlate) }
+
+    println(if (carsByColor.isNotEmpty()) {
+        carsByColor.joinToString( ", " )
+    } else "No cars with color $color were found.")
+}
+
+fun spotByColor(parking: MutableList<Lot>, input: MutableList<String>) {
+    val color = input.last()
+    val spots = mutableListOf<Int>()
+    for (i in parking.indices) {
+        if (parking[i].color.lowercase() == color.lowercase()) spots.add(i + 1)
+    }
+
+    println(if (spots.isNotEmpty()) {
+        spots.joinToString(", ")
+    } else "No cars with color $color were found.")
+}
+
+fun spotByReg(parking: MutableList<Lot>, input: MutableList<String>) {
+    val licensePlate = input[1]
+    val spots = mutableListOf<Int>()
+
+    for (i in parking.indices) {
+        if (parking[i].licensePlate == licensePlate) spots.add(i + 1)
+    }
+
+    println(if (spots.isNotEmpty()) {
+        spots.joinToString(", ")
+    } else "No cars with registration number $licensePlate were found.")
 }
